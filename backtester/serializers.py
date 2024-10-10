@@ -1,19 +1,40 @@
 from rest_framework import serializers
-from user_auth.serializers import UserSerializer
 from backtester.models import Strategy
 
 
-class StrategySerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
+class CreateStrategySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Strategy
+        fields = ("name", "prompt")
+
+    def create(self, validated_data):
+        return Strategy.objects.create(**validated_data)
+
+
+class ListStrategySerializer(serializers.ModelSerializer):
     strategy_id = serializers.IntegerField(source="id", read_only=True)
 
     class Meta:
         model = Strategy
-        fields = ["strategy_id", "prompt", "strategy_code", "parameters", "user"]
-        read_only_fields = ["strategy_id", "user"]
+        fields = (
+            "strategy_id",
+            "name",
+            "prompt",
+            "strategy_code",
+            "parameters",
+        )
 
-    def create(self, validated_data):
-        return Strategy.objects.create(**validated_data)
+
+class UpdateStrategySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Strategy
+        fields = (
+            "name",
+            "prompt",
+            "strategy_code",
+            "parameters",
+        )
 
     def update(self, instance, validated_data):
         instance.prompt = validated_data.get("prompt", instance.prompt)

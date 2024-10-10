@@ -17,6 +17,7 @@ backtrader-plotting = "*"
 numpy = "==1.23.5"
 openai = "==0.28"
 requests = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 
